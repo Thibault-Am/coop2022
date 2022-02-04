@@ -10,7 +10,7 @@
             E-mail : {{this.membre.email}}
         </div>
         <div class="box" >
-            Date de création : {{this.membre.created_at}}
+            Membre depuis le : {{this.membre.created_at}}
         </div>
         
     </div>
