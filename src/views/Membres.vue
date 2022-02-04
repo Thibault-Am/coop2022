@@ -7,7 +7,7 @@
            
             <img :src="avatar(membre)"/><br/>
             {{membre.fullname}}<br/>
-            <p>Membre depuis :{{membre.created_at}}</p>
+            <p>membre depuis le :{{membre.created_at}}</p>
             <button type='button' @click="afficherMembre(membre.fullname)" style="display:block;margin-left:auto;margin-right: 0;" class="button is-primary">+ d'infos</button><br/>
             <button  v-if="membre.id!=membre_act" type='button' @click="supprimerMembre(membre.id)" style="display:block;margin-left:auto;margin-right: 0;" class="button is-danger">Supprimer</button>
 
