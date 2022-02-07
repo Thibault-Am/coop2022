@@ -10,33 +10,31 @@
         <form @submit.prevent="posterMessage">
           <div class="field">
             <div class="control">
-              <input type="text" class="input" v-model="message" />
+              <input type="text" class="input" v-model="mess" />
             </div>
           </div>
           <button class="button is-primary">Ajouter un message</button>
         </form>
       </div>
-      
-      <div class="box" v-for="message in this.messages" :key="message.id">
-          <div v-show="auteur(message.member_id)">
-            
-          </div>
-          <img :src="avatar(membre)"/><br/>
-          <i ><b>Auteur: </b>{{membre.fullname}}</i><br/>
-        
-        <b>Message: </b>{{ message.message }}
+
+      <div v-for="message in messages" :key="message.id" class="box" >
+           <img :src="avatar(auteur(message.member_id))"/>
+        <un-message :message="message" :id_channel="message.id"><br/></un-message>
       </div>
+
     </section>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
+  components: {
+
+  },
   data() {
     return {
       messages: [],
-      message: "message " + Math.random(),
+      mess: "message " + Math.random(),
       conversation: false,
       membres: [],
       membre:""
@@ -45,18 +43,20 @@ export default {
   },
   methods: {
     auteur(id){
+      let returnValue;
       this.membres.forEach(membre => {
-        if (id==membre.id){
-          this.membre=membre
+        if (membre.id===id ){
+          returnValue=membre
         }
+       
       });
+      return returnValue;
     },
     posterMessage() {
       
-      this.$api
-        .post(`channels/${this.conversation.id}/posts`, {
+      this.$api.post(`channels/${this.conversation.id}/posts`, {
           member_id: this.$store.state.member.id,
-          message: this.message,
+          message: this.mess,
           
         })
         .then(() => {
@@ -66,10 +66,13 @@ export default {
     },
     chargerMessages() {
       
-      this.$api
-        .get(`channels/${this.conversation.id}/posts`)
-        .then((response) => {
+      this.$api.get(`channels/${this.conversation.id}/posts`)
+        .then((response)=>{
           this.messages = response.data;
+           this.messages.forEach(message => {
+              console.log(message.member_id);
+              message['auteur'] = this.auteur(message.member_id)
+          })
         });
         
     },
@@ -96,16 +99,17 @@ export default {
       });
     },*/
   },
+
   mounted() {
     
     let id = this.$route.params.idConversation;
 
     this.$api.get(`channels/${id}`).then((response) => {
       //alert('Votre compte a été créé. Vous pouvez vous connecter.')
-      this.conversation = response.data;
-      this.chargerMessages();
+      this.conversation = response.data;    
+       this.chargerMessages();
     });
-
+ 
     this.$api
       .get(`members`)
       .then((response) => {
@@ -116,7 +120,7 @@ export default {
       .catch((error) => {
         alert(error.data.message);
       });
-      
+       
   },
 };
 </script>
