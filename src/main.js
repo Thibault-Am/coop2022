@@ -12,6 +12,7 @@ Vue.prototype.$api=axios.create({
     headers: {'Authorization': "264647fbb4b0f89dcc05c1d60194769db5d050a4"}
 });
 Vue.component('Header', ()=>import('@/components/Header.vue'));
+Vue.component('un-message', ()=>import('@/components/unMessage.vue'));
 import {Outils} from "./mixins/Outils.js";
 Vue.mixin(Outils);
 Vue.prototype.$api.interceptors.request.use(function (config) {
